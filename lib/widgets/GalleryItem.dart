@@ -8,11 +8,6 @@ class GalleryItem extends StatelessWidget {
 
   GalleryItem(this.file);
 
-  void _selectGalleryItem(BuildContext context){
-    print("${file.path}");
-    Navigator.pushNamed(context, "/file-overview", arguments: basename(file.path));
-  }
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -20,7 +15,13 @@ class GalleryItem extends StatelessWidget {
         file,
         fit: BoxFit.cover,
       ),
-      onTap: () =>_selectGalleryItem(context),
+      onTap: () {
+        Navigator.pushNamed(
+          context,
+          "/file-overview",
+          arguments: basename(file.path),
+        );
+      },
     );
   }
 }

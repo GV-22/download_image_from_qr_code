@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import './GalleryScreen.dart';
 import './ScanScreen.dart';
-import './SettingsScreen.dart';
+import 'InfosScreen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({
@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget>_pages = [
     GalleryScreen(),
     ScanScreen(),
-    SettingsScreen()
+    InfosScreen()
   ];
 
   int _selectedPageIndex = 1;
@@ -41,11 +41,13 @@ class _MainScreenState extends State<MainScreen> {
         items: [
           TabItem(icon: Icons.photo_library_outlined, title: "Gallerie"),
           TabItem(icon: Icons.qr_code_scanner_outlined, title: "Scan"),
-          TabItem(icon: Icons.settings, title: "Réglages"),
+          TabItem(icon: Icons.info_outline, title: "Infos"),
         ],
         activeColor: Theme.of(context).accentColor,
         initialActiveIndex: 1,
         onTap:_selectPage,
+        backgroundColor: Theme.of(context).primaryColor,
+        // backgroundColor: Color.fromRGBO(33, 97, 140, 1),
       ),
     );
   }

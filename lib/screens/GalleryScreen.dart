@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 import '../providers/StorageProvider.dart';
 import '../widgets/GalleryItem.dart';
 
@@ -15,11 +14,13 @@ class GalleryScreen extends StatefulWidget {
 class _GalleryScreenState extends State<GalleryScreen> {
   @override
   void initState() {
-    Provider.of<StorageProvider>(context, listen: false)
-        .retrieveAndStoredFiles()
-        .then((value) {
+    try {
+      Provider.of<StorageProvider>(context, listen: false)
+          .retrieveAndStoredFiles();
+    } finally {
       setState(() {});
-    });
+    }
+
     super.initState();
   }
 

@@ -37,6 +37,7 @@ class StorageProvider with ChangeNotifier {
   }
 
   Future<void> retrieveAndStoredFiles() async {
+    if(_savedFiles.isNotEmpty) return;
     final files = await retrieveStoredFiles();
     List<SavedFile> tmp = [];
 
@@ -55,5 +56,17 @@ class StorageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteFile(String fileId) {}
+  Future<bool> deleteFile(String fileName)  async {
+    try {
+      final file = findFileByName(fileName);
+      await deleteFileFromDevice(file.filePath);
+
+      _savedFiles.removeWhere((f) => f.fileName == file.fileName);
+      notifyListeners();
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }

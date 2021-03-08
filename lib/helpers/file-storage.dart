@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 
 import '../helpers/directories.dart';
 
+final dio = Dio();
 
 Future<String> downloadFile(String fileUrl, String fileName) async {
   Directory directory;
@@ -23,7 +24,6 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
     if (await directory.exists()) {
       File saveFile = File(directory.path + "/$fileName" + ".jpeg");
 
-      final dio = new Dio();
       await dio.download(fileUrl, saveFile.path);
 
       filePath = saveFile.path;
@@ -33,6 +33,16 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
   }
 
   return filePath;
+}
+
+Future<void> deleteFileFromDevice(filePath) async {
+  // await dio.delete(fileUrl,);
+  File file = File(filePath);
+  try {
+    await file.delete();
+  } catch (e) {
+    throw e;
+  }
 }
 
 Future<List<File>> retrieveStoredFiles() async {

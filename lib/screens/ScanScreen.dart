@@ -22,18 +22,6 @@ class _ScanScreenState extends State<ScanScreen> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   bool _isScanning = true;
   bool _isFlashActive = false;
-  bool _isSuccessfullySaved;
-  // bool _isDownloading = false;
-
-  @override
-  void didChangeDependencies() {
-    if (!_isScanning) this.controller.pauseCamera();
-    if (result != null) {
-      downloadScannedFile()
-          .then((value) => print("===========> downladed finished ======>"));
-    }
-    super.didChangeDependencies();
-  }
 
   @override
   void initState() {
@@ -57,23 +45,13 @@ class _ScanScreenState extends State<ScanScreen> {
     controller.resumeCamera();
   }
 
-  Future<void> downloadScannedFile() async {
-    // print("==============> result.code ========> ${result.code}");
-    // await downloadFile(result.code);
-    // await downloadFile(
-    //     "");
-    const url2 =
-        "https://image.freepik.com/photos-gratuite/equipement-affaires-bureau-noir-fond-noir_1387-732.jpg";
-    const url =
-        "https://cdnb.artstation.com/p/assets/images/images/007/341/099/large/ricardo-tilim-10-noir-office-0890-far.jpg?1505449015";
-
-    // _isDownloading = true;
+  Future<void> _downloadScannedFile() async {
+    this.controller.pauseCamera();
     BuildContext dctx;
     showDialog(
       context: context,
       builder: (btcx) {
         dctx = btcx;
-        print("========> before alert dialog dctx $dctx========>");
         return AlertDialog(
           title: Text("Téléchargement"),
           content: Container(
@@ -85,9 +63,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   "Progression",
                   style: TextStyle(fontSize: 12),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 LinearProgressIndicator(),
               ],
             ),
@@ -97,42 +73,76 @@ class _ScanScreenState extends State<ScanScreen> {
     );
 
     Provider.of<StorageProvider>(context, listen: false)
-        .storeFile(url)
-        .then((value) {
-      setState(() {
-        _isSuccessfullySaved = value;
-      });
+        .storeFile(result.code)
+        .then((_) {
       Navigator.of(dctx).pop();
-    }).catchError((onError) {
-      print("==><>>>>>>>> savedfile error ${onError.toString()}");
-      print("========> pop alert dialog dctx $dctx========>");
-      setState(() {
-        _isSuccessfullySaved = false;
-      });
+      this.controller.resumeCamera();
+    }).catchError((_) {
       Navigator.of(dctx).pop();
+      _errorDialog(
+          "Le télécharegement a échoué. \n Veuillez vérifier votre accès internet et réessayer.");
     });
   }
 
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
-      // this.controller.pauseCamera();
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      result = scanData;
+      if (_canDownload()) {
+        _downloadScannedFile();
+      } else {
+        _errorDialog(
+            "L'url de l'image n'a pas été détecté. \n Veuillez réessayer.");
+      }
+      // setState(() {
+      // });
     });
   }
 
-  Future<void> toggleFlash() async {
+  Future<void> _errorDialog(String content) async {
+    await showDialog(
+      context: context,
+      builder: (btcx) {
+        return AlertDialog(
+          title: Text(
+            "Erreur",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).errorColor,
+            ),
+          ),
+          content: Text(content),
+          actions: [
+            TextButton(
+              child: Text("Ok"),
+              onPressed: () {
+                Navigator.of(btcx).pop();
+                this.controller.resumeCamera();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
+
+  bool _canDownload() {
+    final link = result.code;
+    if (link.startsWith("http")) return true;
+
+    return false;
+  }
+
+  Future<void> _toggleFlash() async {
     await this.controller?.toggleFlash();
     setState(() {
       _isFlashActive = !_isFlashActive;
     });
   }
 
-  Future<void> setCameraStatus() async {
+  Future<void> _setCameraStatus() async {
     if (_isScanning)
       await controller?.pauseCamera();
     else
@@ -155,17 +165,21 @@ class _ScanScreenState extends State<ScanScreen> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-        borderColor: Theme.of(context).primaryColor,
+        borderColor: Theme.of(context).accentColor,
         borderRadius: 10,
         borderLength: 30,
         borderWidth: 10,
-        cutOutSize: scanArea,
+        cutOutSize: 300,
       ),
     );
   }
 
-  Widget buildIconButton(bool value, IconData activeIcon, IconData deactiveIcon,
-      Function handler) {
+  Widget _buildIconButton(
+    bool value,
+    IconData activeIcon,
+    IconData deactiveIcon,
+    Function handler,
+  ) {
     return IconButton(
       icon: Icon(
         value ? activeIcon : deactiveIcon,
@@ -187,52 +201,28 @@ class _ScanScreenState extends State<ScanScreen> {
         ),
         Expanded(
           flex: 1,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              if (result != null)
-                FittedBox(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Barcode Type: ${describeEnum(result.format)}   Data: ${result.code}',
-                      ),
-                      if (_isSuccessfullySaved)
-                        Text(
-                          "Image téléchargée avec succès",
-                        )
-                      else
-                        Text(
-                          "Échec lors du téléchargement de l'image"
-                        ),
-                    ],
-                  ),
-                )
-              else
-                Text('Scan a code'),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  buildIconButton(
-                    _isFlashActive,
-                    Icons.flash_on,
-                    Icons.flash_off,
-                    toggleFlash,
-                  ),
-                  buildIconButton(
-                    _isScanning,
-                    Icons.camera_alt_outlined,
-                    Icons.camera_alt_rounded,
-                    setCameraStatus,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.download_rounded),
-                    onPressed: downloadScannedFile,
-                  )
-                ],
-              ),
-            ],
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            // color: Color.fromRGBO(0, 0, 0, 0.7),
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildIconButton(
+                  _isFlashActive,
+                  Icons.flash_on,
+                  Icons.flash_off,
+                  _toggleFlash,
+                ),
+                _buildIconButton(
+                  _isScanning,
+                  Icons.camera_alt_outlined,
+                  Icons.camera_alt_rounded,
+                  _setCameraStatus,
+                ),
+              ],
+            ),
           ),
         ),
       ],
