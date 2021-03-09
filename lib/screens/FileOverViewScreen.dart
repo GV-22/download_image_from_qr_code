@@ -34,18 +34,57 @@ class FileOverViewScreen extends StatelessWidget {
   }
 
   Future<void> _onShare(BuildContext context, filePath) async {
-    // A builder is used to retrieve the context immediately
-    // surrounding the ElevatedButton.
-    //
-    // The context's `findRenderObject` returns the first
-    // RenderObject in its descendent tree when it's not
-    // a RenderObjectWidget. The ElevatedButton's RenderObject
-    // has its position and size after it's built.
     final RenderBox box = context.findRenderObject() as RenderBox;
 
     await Share.shareFiles(
       [filePath],
       sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size,
+    );
+  }
+
+  void _confirmDete(BuildContext context, String fileName) {
+    showDialog(
+      context: context,
+      builder: (btcx) {
+        return AlertDialog(
+          title: Text(
+            "Confirmation",
+            style: TextStyle(
+              color: Theme.of(context).errorColor,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          content: Text("Voulez-vous supprimer cette image ?"),
+          // backgroundColor: Theme.of(context).primaryColor,
+          // contentTextStyle: TextStyle(color: Theme.of(context).accentColor),
+          actions: [
+            TextButton(
+              child: Text("Oui"),
+              onPressed: () {
+                Provider.of<StorageProvider>(context, listen: false)
+                    .deleteFile(fileName)
+                    .then((_) {
+                  Navigator.of(btcx).pop();
+                  _showSnackBar(
+                      context, "L'image a été supprimée avec succès.");
+                  Future.delayed(Duration(seconds: 2), () {
+                    Navigator.of(context).pop();
+                  });
+                }).catchError(
+                  (onError) {
+                    _showSnackBar(context,
+                        "Une erreur s'est produite lors de la suppression.");
+                  },
+                );
+              },
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(btcx).pop(),
+              child: Text("Non"),
+            )
+          ],
+        );
+      },
     );
   }
 
@@ -56,7 +95,8 @@ class FileOverViewScreen extends StatelessWidget {
     final file = storage.findFileByName(fileName);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Theme.of(context).primaryColor,
+        // backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Colors.black12,
       ),
       extendBodyBehindAppBar: true,
       body: Column(
@@ -75,20 +115,11 @@ class FileOverViewScreen extends StatelessWidget {
                     buildBottomIcon(context, Icons.share_outlined, () async {
                       await _onShare(context, file.filePath);
                     }),
-                    buildBottomIcon(context, Icons.delete_outline, () {
-                      storage.deleteFile(fileName).then((_) {
-                        _showSnackBar(
-                            context, "L'image a été supprimée avec succès.");
-                        Future.delayed(Duration(seconds: 2), () {
-                          Navigator.of(context).pop();
-                        });
-                      }).catchError(
-                        (onError) {
-                          _showSnackBar(context,
-                              "Une erreur s'est produite lors de la suppression.");
-                        },
-                      );
-                    }),
+                    buildBottomIcon(
+                      context,
+                      Icons.delete_outline,
+                      () => _confirmDete(context, fileName),
+                    ),
                   ],
                 ),
               ),

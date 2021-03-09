@@ -7,7 +7,7 @@ import '../constants.dart';
 Future<String> getAppStorageDirectoryPath() async {
   Directory directory = await getExternalStorageDirectory();
   String newPath = "";
-  print("=====================> directory $directory");
+  // print("=====================> directory $directory");
   List<String> paths = directory.path.split("/");
   for (int x = 1; x < paths.length; x++) {
     String folder = paths[x];

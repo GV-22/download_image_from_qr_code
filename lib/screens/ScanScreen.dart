@@ -20,8 +20,8 @@ class _ScanScreenState extends State<ScanScreen> {
   Barcode result;
   QRViewController controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  bool _isScanning = true;
-  bool _isFlashActive = false;
+  // bool _isScanning = true;
+  // bool _isFlashActive = false;
 
   @override
   void initState() {
@@ -54,6 +54,8 @@ class _ScanScreenState extends State<ScanScreen> {
         dctx = btcx;
         return AlertDialog(
           title: Text("Téléchargement"),
+          // backgroundColor: Theme.of(context).primaryColor,
+          // contentTextStyle: TextStyle(color: Theme.of(context).accentColor),
           content: Container(
             height: 100,
             child: Column(
@@ -80,7 +82,7 @@ class _ScanScreenState extends State<ScanScreen> {
     }).catchError((_) {
       Navigator.of(dctx).pop();
       _errorDialog(
-          "Le télécharegement a échoué. \n Veuillez vérifier votre accès internet et réessayer.");
+          "Le télécharegement a échoué.\nVeuillez vérifier votre accès internet et réessayer.");
     });
   }
 
@@ -94,18 +96,18 @@ class _ScanScreenState extends State<ScanScreen> {
         _downloadScannedFile();
       } else {
         _errorDialog(
-            "L'url de l'image n'a pas été détecté. \n Veuillez réessayer.");
+            "Le scanner n'a pas pu détecter une url d'image.\nVeuillez réessayer.");
       }
-      // setState(() {
-      // });
     });
   }
 
   Future<void> _errorDialog(String content) async {
-    await showDialog(
+    return await showDialog(
       context: context,
       builder: (btcx) {
         return AlertDialog(
+          // backgroundColor: Theme.of(context).accentColor,
+          // contentTextStyle: TextStyle(color: Theme.of(context).primaryColor),
           title: Text(
             "Erreur",
             style: TextStyle(
@@ -113,10 +115,14 @@ class _ScanScreenState extends State<ScanScreen> {
               color: Theme.of(context).errorColor,
             ),
           ),
+          shape: Border.all(color: Theme.of(context).accentColor, width: 1.0),
           content: Text(content),
           actions: [
             TextButton(
-              child: Text("Ok"),
+              child: Text(
+                "OK",
+                style: TextStyle(color: Theme.of(context).primaryColor),
+              ),
               onPressed: () {
                 Navigator.of(btcx).pop();
                 this.controller.resumeCamera();
@@ -130,37 +136,32 @@ class _ScanScreenState extends State<ScanScreen> {
 
   bool _canDownload() {
     final link = result.code;
-    if (link.startsWith("http")) return true;
+    RegExp regEx = new RegExp(r"^.*\.(jpg|JPG|gif|GIF|jpeg|JPEG)[A-Za-z0-9?]*$");
+
+    if (regEx.hasMatch(link)) return true;
 
     return false;
   }
 
-  Future<void> _toggleFlash() async {
-    await this.controller?.toggleFlash();
-    setState(() {
-      _isFlashActive = !_isFlashActive;
-    });
-  }
+  // Future<void> _toggleFlash() async {
+  //   await this.controller?.toggleFlash();
+  //   setState(() {
+  //     _isFlashActive = !_isFlashActive;
+  //   });
+  // }
 
-  Future<void> _setCameraStatus() async {
-    if (_isScanning)
-      await controller?.pauseCamera();
-    else
-      await controller?.resumeCamera();
+  // Future<void> _setCameraStatus() async {
+  //   if (_isScanning)
+  //     await controller?.pauseCamera();
+  //   else
+  //     await controller?.resumeCamera();
 
-    setState(() {
-      _isScanning = !_isScanning;
-    });
-  }
+  //   setState(() {
+  //     _isScanning = !_isScanning;
+  //   });
+  // }
 
   Widget _buildQrView() {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 230.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -169,25 +170,8 @@ class _ScanScreenState extends State<ScanScreen> {
         borderRadius: 10,
         borderLength: 30,
         borderWidth: 10,
-        cutOutSize: 300,
+        cutOutSize: 280,
       ),
-    );
-  }
-
-  Widget _buildIconButton(
-    bool value,
-    IconData activeIcon,
-    IconData deactiveIcon,
-    Function handler,
-  ) {
-    return IconButton(
-      icon: Icon(
-        value ? activeIcon : deactiveIcon,
-        size: 40,
-      ),
-      color: value ? Theme.of(context).accentColor : Colors.black,
-      disabledColor: Colors.grey,
-      onPressed: handler,
     );
   }
 
@@ -198,33 +182,7 @@ class _ScanScreenState extends State<ScanScreen> {
         Expanded(
           flex: 4,
           child: _buildQrView(),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            // color: Color.fromRGBO(0, 0, 0, 0.7),
-            color: Colors.white,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                _buildIconButton(
-                  _isFlashActive,
-                  Icons.flash_on,
-                  Icons.flash_off,
-                  _toggleFlash,
-                ),
-                _buildIconButton(
-                  _isScanning,
-                  Icons.camera_alt_outlined,
-                  Icons.camera_alt_rounded,
-                  _setCameraStatus,
-                ),
-              ],
-            ),
-          ),
-        ),
+        )
       ],
     );
   }

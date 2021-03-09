@@ -16,15 +16,9 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
-  final List<Widget>_pages = [
-    GalleryScreen(),
-    ScanScreen(),
-    InfosScreen()
-  ];
+  final List<Widget> _pages = [GalleryScreen(), ScanScreen(), InfosScreen()];
 
   int _selectedPageIndex = 1;
-
 
   void _selectPage(int index) {
     setState(() {
@@ -36,14 +30,17 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _pages[_selectedPageIndex],
+      
       bottomNavigationBar: ConvexAppBar(
-        style: TabStyle.react,
+        // height: 60.0,
+        style: TabStyle.reactCircle,
         items: [
           TabItem(icon: Icons.photo_library_outlined, title: "Gallerie"),
           TabItem(icon: Icons.qr_code_scanner_outlined, title: "Scan"),
           TabItem(icon: Icons.info_outline, title: "Infos"),
         ],
         activeColor: Theme.of(context).accentColor,
+        curve: Curves.linear,
         initialActiveIndex: 1,
         onTap:_selectPage,
         backgroundColor: Theme.of(context).primaryColor,

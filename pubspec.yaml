@@ -32,7 +32,8 @@ dependencies:
   permission_handler: ^5.1.0+2
   share: ^2.0.0
   url_launcher: ^6.0.2
-  # image_gallery_saver: '^1.6.8'
+  font_awesome_flutter: ^8.11.0
+  lottie: ^1.0.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -55,9 +56,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - assets/images/qr_icon_v1-256.png
+    - assets/images/empty_box-256.png
+    - assets/lotties/empty-black-lottie-folder.json
+    - assets/lotties/search-file.json
+  
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

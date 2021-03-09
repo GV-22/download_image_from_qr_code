@@ -22,7 +22,8 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
     }
 
     if (await directory.exists()) {
-      File saveFile = File(directory.path + "/$fileName" + ".jpeg");
+      final fileExt = await getFileExtension(fileUrl);
+      File saveFile = File("${directory.path}/$fileName" + fileExt);
 
       await dio.download(fileUrl, saveFile.path);
 
@@ -34,6 +35,34 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
 
   return filePath;
 }
+
+Future<String> getFileExtension(String fileUrl) async {
+  try {
+    Response response = await Dio().get(fileUrl);
+
+    print("${response.headers['content-type'][0]}");
+    final contentType = response.headers['content-type'][0];
+    switch (contentType) {
+      case "image/jpg":
+        return ".jpeg";
+        break;
+      case "image/jpeg":
+        return ".jpeg";
+        break;
+      case "image/png":
+        return ".png";
+        break;
+      case "image/gif":
+        return ".gif";
+      default:
+        return contentType.split("/").last;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+Future<void> gethe() async {}
 
 Future<void> deleteFileFromDevice(filePath) async {
   // await dio.delete(fileUrl,);
@@ -47,6 +76,12 @@ Future<void> deleteFileFromDevice(filePath) async {
 
 Future<List<File>> retrieveStoredFiles() async {
   final storagePath = await getAppStorageDirectoryPath();
+  final directory = Directory(storagePath);
+
+  if (!await directory.exists()) {
+    await directory.create(recursive: true);
+  }
+
   final fileList = Directory(storagePath).listSync();
   final List<File> files = [];
 

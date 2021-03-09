@@ -10,7 +10,9 @@ class GalleryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseName = basename(file.path);
     return GestureDetector(
+      key: Key(baseName),
       child: Image.file(
         file,
         fit: BoxFit.cover,
@@ -19,7 +21,7 @@ class GalleryItem extends StatelessWidget {
         Navigator.pushNamed(
           context,
           "/file-overview",
-          arguments: basename(file.path),
+          arguments: baseName,
         );
       },
     );

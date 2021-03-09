@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/StorageProvider.dart';
@@ -12,33 +13,96 @@ class GalleryScreen extends StatefulWidget {
 }
 
 class _GalleryScreenState extends State<GalleryScreen> {
+  bool _isLoading = false;
+
   @override
   void initState() {
-    try {
-      Provider.of<StorageProvider>(context, listen: false)
-          .retrieveAndStoredFiles();
-    } finally {
-      setState(() {});
-    }
+    setState(() {
+      _isLoading = true;
+    });
+    _retrieve();
 
     super.initState();
   }
 
+  Future<void> _retrieve() async {
+    try {
+      Provider.of<StorageProvider>(context, listen: false)
+          .retrieveAndStoredFiles()
+          .then((_) => setState(() {
+                _isLoading = false;
+              }));
+    } finally {
+      setState(() {});
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final storage = Provider.of<StorageProvider>(context, listen: false);
-    return GridView.builder(
-      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-        childAspectRatio: 1 / 1,
-        maxCrossAxisExtent: 90,
-        crossAxisSpacing: 3,
-        mainAxisSpacing: 3,
-      ),
-      itemCount: storage.savedFiles.length,
-      itemBuilder: (bctx, index) {
-        final file = File(storage.savedFiles[index].filePath);
-        return GalleryItem(file);
-      },
-    );
+    final storage = Provider.of<StorageProvider>(context);
+    final savedFiles = storage.savedFiles;
+
+    return savedFiles.isEmpty
+        ? Container(
+            width: double.infinity,
+            // color: Theme.of(context).primaryColor,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                LottieBuilder.asset(
+                  "assets/lotties/empty-black-lottie-folder.json",
+                  height: 150,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  "Vous n'avez aucune image sauvegardée.",
+                  style: TextStyle(fontSize: 15),
+                ),
+              ],
+            ),
+          )
+        : _isLoading
+            ? Container(
+                margin: EdgeInsets.symmetric(horizontal: 30),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    LottieBuilder.asset(
+                      "assets/lotties/search-file.json",
+                      height: 150,
+                    ),
+                    SizedBox(height: 20),
+                    Text("Chargement des fichiers. Veuillez patienter.")
+                  ],
+                ),
+              )
+            : RefreshIndicator(
+                onRefresh: _retrieve,
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: MediaQuery.of(context).padding.top,
+                    left: 8,
+                    right: 5,
+                    bottom: 10,
+                  ),
+                  child: GridView.builder(
+                    gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      childAspectRatio: 1 / 1,
+                      maxCrossAxisExtent: 90,
+                      crossAxisSpacing: 3,
+                      mainAxisSpacing: 3,
+                    ),
+                    itemCount: savedFiles.length,
+                    itemBuilder: (bctx, index) {
+                      final file = File(savedFiles[index].filePath);
+                      return GalleryItem(file);
+                    },
+                  ),
+                ),
+              );
   }
 }
