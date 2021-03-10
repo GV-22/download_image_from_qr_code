@@ -1,8 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.download_image_from_qr_code">
    <application
-        android:label="download_image_from_qr_code"
-        android:icon="@mipmap/ic_launcher"
+        android:label="Download Image From QR Code"
+        android:icon="@drawable/ic_launcher"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name=".MainActivity"
@@ -40,4 +40,5 @@
             android:value="2" />
     </application>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
