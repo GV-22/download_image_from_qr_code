@@ -193,7 +193,7 @@ class _ScanScreenState extends State<ScanScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Scan QR Code"),
+        title: Text("Scan Image QR Code"),
         actions: [
           IconButton(
             icon: Icon(Icons.info_outline),

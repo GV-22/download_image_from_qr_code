@@ -64,12 +64,13 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Images sauvegardées"),
+        title: FittedBox(child: Text("Images sauvegardées")),
         actions: [
-          IconButton(
-            icon: Icon(Icons.delete_forever_outlined),
-            onPressed: _deleteAll,
-          ),
+          if (storage.savedFiles.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.delete_forever_outlined),
+              onPressed: _deleteAll,
+            ),
           IconButton(
             icon: Icon(Icons.info_outline),
             onPressed: () => Navigator.of(context).pushNamed("/infos"),
