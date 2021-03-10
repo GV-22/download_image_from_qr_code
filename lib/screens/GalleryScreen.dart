@@ -37,24 +37,52 @@ class _GalleryScreenState extends State<GalleryScreen> {
     }
   }
 
-  Future<void> _deleteAll() async {
-    try {
-      Provider.of<StorageProvider>(context, listen: false)
-          .deleteAllSavedFiles()
-          .then(
-            (_) => ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  "Images supprimées",
-                  style: TextStyle(color: Colors.white),
-                ),
-                backgroundColor: Theme.of(context).primaryColor,
-              ),
+  void _confirmDelete() {
+    showDialog(
+      context: context,
+      builder: (btcx) {
+        return AlertDialog(
+          title: Text(
+            "Confirmation",
+            style: TextStyle(
+              color: Theme.of(context).errorColor,
+              fontWeight: FontWeight.bold,
             ),
-          );
-    } finally {
-      setState(() {});
-    }
+          ),
+          content:
+              Text("Voulez-vous supprimer toutes les images sauvegardées ?"),
+          actions: [
+            TextButton(
+              child: Text("Oui"),
+              onPressed: () {
+                try {
+                  Provider.of<StorageProvider>(context, listen: false)
+                      .deleteAllSavedFiles()
+                      .then(
+                        (_) => ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              "Images supprimées",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            backgroundColor: Theme.of(context).primaryColor,
+                          ),
+                        ),
+                      );
+                } finally {
+                  Navigator.of(btcx).pop();
+                  setState(() {});
+                }
+              },
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(btcx).pop(),
+              child: Text("Non"),
+            )
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -69,7 +97,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
           if (storage.savedFiles.isNotEmpty)
             IconButton(
               icon: Icon(Icons.delete_forever_outlined),
-              onPressed: _deleteAll,
+              onPressed: _confirmDelete,
             ),
           IconButton(
             icon: Icon(Icons.info_outline),

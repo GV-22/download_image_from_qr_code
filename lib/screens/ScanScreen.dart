@@ -89,6 +89,7 @@ class _ScanScreenState extends State<ScanScreen> {
           backgroundColor: Theme.of(context).accentColor,
         ),
       );
+      this.controller.resumeCamera();
       setState(() {
         _isScanning = true;
       });
@@ -115,8 +116,8 @@ class _ScanScreenState extends State<ScanScreen> {
     });
   }
 
-  Future<void> _errorDialog(String content) async {
-    return await showDialog(
+  void _errorDialog(String content) {
+    showDialog(
       context: context,
       builder: (btcx) {
         return AlertDialog(
@@ -137,7 +138,6 @@ class _ScanScreenState extends State<ScanScreen> {
               ),
               onPressed: () {
                 Navigator.of(btcx).pop();
-                this.controller.resumeCamera();
               },
             )
           ],
@@ -149,7 +149,7 @@ class _ScanScreenState extends State<ScanScreen> {
   bool _canDownload() {
     final link = result.code;
     RegExp regEx =
-        new RegExp(r"^.*\.(jpg|JPG|gif|GIF|jpeg|JPEG)[A-Za-z0-9?]*$");
+        new RegExp(r"^.*\.(jpg|JPG|gif|GIF|png|PNG)[A-Za-z0-9?]*$");
 
     if (regEx.hasMatch(link)) return true;
 
