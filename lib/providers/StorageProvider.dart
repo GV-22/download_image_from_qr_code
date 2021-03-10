@@ -18,16 +18,17 @@ class StorageProvider with ChangeNotifier {
     return [..._savedFiles];
   }
 
-  SavedFile findFileByName(String fileName){
+  SavedFile findFileByName(String fileName) {
     return _savedFiles.firstWhere((f) => f.fileName == fileName);
   }
 
   Future<bool> storeFile(String fileUrl) async {
     final fileName = formatDateToFileName();
-    final storedFilePath = await downloadFile(fileUrl, fileName);
+    final storedFile = await downloadFile(fileUrl, fileName);
+    // storedFile = [filePath, fileExt]
 
-    if (storedFilePath != null) {
-      _savedFiles.insert(0, SavedFile(fileName, storedFilePath));
+    if (storedFile != null) {
+      _savedFiles.insert(0, SavedFile(fileName + storedFile[1], storedFile[0]));
 
       notifyListeners();
       return true;
@@ -37,7 +38,7 @@ class StorageProvider with ChangeNotifier {
   }
 
   Future<void> retrieveAndStoredFiles() async {
-    if(_savedFiles.isNotEmpty) return;
+    if (_savedFiles.isNotEmpty) return;
     final files = await retrieveStoredFiles();
     List<SavedFile> tmp = [];
 
@@ -56,7 +57,7 @@ class StorageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> deleteFile(String fileName)  async {
+  Future<bool> deleteFile(String fileName) async {
     try {
       final file = findFileByName(fileName);
       await deleteFileFromDevice(file.filePath);
@@ -69,4 +70,18 @@ class StorageProvider with ChangeNotifier {
       return false;
     }
   }
+
+  Future<bool> deleteAllSavedFiles() async {
+    try {
+      await deleteAllFiles();
+      _savedFiles = [];
+      notifyListeners();
+
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+
 }

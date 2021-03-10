@@ -24,7 +24,6 @@ dependencies:
   flutter:
     sdk: flutter
   provider: ^5.0.0
-  convex_bottom_bar: ^2.7.1+2
   qr_code_scanner: ^0.3.5
   barcode_scan_fix: ^1.0.2
   dio: ^3.0.10
@@ -32,7 +31,6 @@ dependencies:
   permission_handler: ^5.1.0+2
   share: ^2.0.0
   url_launcher: ^6.0.2
-  font_awesome_flutter: ^8.11.0
   lottie: ^1.0.1
 
 
@@ -57,8 +55,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/images/qr_icon_v1-256.png
-    - assets/images/empty_box-256.png
+    - assets/images/app_icon_bw.png
+    - assets/images/share_outline_70.png
+    - assets/images/whatsapp_icon_70.png
     - assets/lotties/empty-black-lottie-folder.json
     - assets/lotties/search-file.json
   

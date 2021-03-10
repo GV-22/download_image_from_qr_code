@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,138 +26,133 @@ class InfosScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildIconCard(BuildContext context, IconData icon, Function handler) {
-    return Card(
-      color: Theme.of(context).primaryColor,
-      child: IconButton(
-        icon: Icon(
-          icon,
-          color: Theme.of(context).accentColor,
+  Widget _buildButton(BuildContext context, String iconUrl, Function handler) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: handler,
+      child: Card(
+        child: Container(
+          height: 50,
+          width: 50,
+          child: Row(
+            children: [
+              Image.asset(
+                iconUrl,
+                fit: BoxFit.cover,
+              ),
+            ],
+          ),
         ),
-        onPressed: handler,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).accentColor,
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(75),
-                ),
-              ),
-              width: double.infinity,
-              margin: EdgeInsets.only(top: MediaQuery.of(context).padding.top),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 150,
-                    height: 150,
-                    margin: EdgeInsets.symmetric(horizontal: 20),
-                    child: Image.asset(
-                      "assets/images/qr_icon_v1-256.png",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    appName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Container(
-              // color: Theme.of(context).accentColor,
-              alignment: Alignment.bottomCenter,
-              margin: EdgeInsets.only(bottom: 20),
-              child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Infos"),
+      ),
+      body: Container(
+        color: Theme.of(context).primaryColor,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 2,
+              child: Container(
+                width: double.infinity,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Un produit de ",
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        Text(
-                          "<Informat-Pro />",
-                          style: TextStyle(
-                            color: Theme.of(context).primaryColor,
-                            fontWeight: FontWeight.bold,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        _buildIconCard(
-                          context,
-                          Icons.share_outlined,
-                          () async => _shareApp(context),
-                        ),
-                        _buildIconCard(
-                          context,
-                          Icons.mail_outline,
-                          () async {
-                            await _urlLauncher(
-                              context,
-                              mailUrl,
-                              "Erreur lors de l'ouverture de GMail. Assurez-vous que GMail" +
-                                  "soit installée sur votre téléphone.",
-                            );
-                          },
-                        ),
-                        _buildIconCard(
-                          context,
-                          FontAwesomeIcons.whatsapp,
-                          () async {
-                            await _urlLauncher(
-                              context,
-                              whatsappUrl,
-                              "Erreur lors de l'ouverture de Whatsapp. Assurez-vous que Whatsapp" +
-                                  "soit installée sur votre téléphone.",
-                            );
-                          },
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      "Version: 1.0.0",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontStyle: FontStyle.italic,
+                    Container(
+                      width: 100,
+                      height: 100,
+                      margin: EdgeInsets.symmetric(horizontal: 20),
+                      child: Image.asset(
+                        "assets/images/app_icon_bw.png",
+                        // fit: BoxFit.cover,
                       ),
+                    ),
+                    SizedBox(height: 20),
+                    Text(
+                      "Download Image \n From QR Code",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          color: Theme.of(context).accentColor),
                     ),
                   ],
                 ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              flex: 2,
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                margin: EdgeInsets.only(bottom: 20),
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Un produit de ",
+                            style: TextStyle(
+                              color: Colors.white54,
+                            ),
+                          ),
+                          Text(
+                            "<Informat-Pro />",
+                            style: TextStyle(
+                              color: Theme.of(context).accentColor,
+                              fontWeight: FontWeight.bold,
+                              fontStyle: FontStyle.italic,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          _buildButton(
+                            context,
+                            "assets/images/share_outline_70.png",
+                            () => _shareApp(context),
+                          ),
+                          _buildButton(
+                            context,
+                            "assets/images/whatsapp_icon_70.png",
+                            () async {
+                              await _urlLauncher(
+                                context,
+                                whatsappUrl,
+                                "Erreur lors de l'ouverture de Whatsapp. Assurez-vous que Whatsapp" +
+                                    "soit installée sur votre téléphone.",
+                              );
+                            },
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "Version: 1.0.0",
+                        style: TextStyle(
+                          color: Colors.white54,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

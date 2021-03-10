@@ -22,10 +22,6 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    // SystemChrome.setPreferredOrientations([
-    //   DeviceOrientation.portraitUp,
-    //   DeviceOrientation.portraitDown,
-    // ]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -36,7 +32,8 @@ class MyApp extends StatelessWidget {
         title: 'Flutter Demo',
         theme: ThemeData(
           primaryColor: Colors.black,
-          accentColor: Color.fromRGBO(204, 210, 160, 1),
+          accentColor: Color.fromRGBO(247, 253, 255, 1),
+          // accentColor: Color.fromRGBO(204, 210, 160, 1),
           // accentColor: Color.fromRGBO(0, 0, 255, 1),
           // accentColor: Colors.blue,
         ),

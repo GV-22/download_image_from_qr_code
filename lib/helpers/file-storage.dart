@@ -8,9 +8,11 @@ import '../helpers/directories.dart';
 
 final dio = Dio();
 
-Future<String> downloadFile(String fileUrl, String fileName) async {
+Future<List<String>> downloadFile(String fileUrl, String fileName) async {
   Directory directory;
   String filePath;
+  String fileExt = await getFileExtension(fileUrl);
+
   try {
     if (await _requestPermission(Permission.storage)) {
       String storageFolderPath = await getAppStorageDirectoryPath();
@@ -22,7 +24,6 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
     }
 
     if (await directory.exists()) {
-      final fileExt = await getFileExtension(fileUrl);
       File saveFile = File("${directory.path}/$fileName" + fileExt);
 
       await dio.download(fileUrl, saveFile.path);
@@ -33,14 +34,13 @@ Future<String> downloadFile(String fileUrl, String fileName) async {
     throw e;
   }
 
-  return filePath;
+  return [filePath, fileExt];
 }
 
 Future<String> getFileExtension(String fileUrl) async {
   try {
     Response response = await Dio().get(fileUrl);
-
-    print("${response.headers['content-type'][0]}");
+    
     final contentType = response.headers['content-type'][0];
     switch (contentType) {
       case "image/jpg":
@@ -62,10 +62,16 @@ Future<String> getFileExtension(String fileUrl) async {
   }
 }
 
-Future<void> gethe() async {}
+Future<void> deleteAllFiles() async {
+  final Directory directory = await getAppDir();
+  try {
+    await directory.delete(recursive: true);
+  } catch (e) {
+    throw e;
+  }
+}
 
 Future<void> deleteFileFromDevice(filePath) async {
-  // await dio.delete(fileUrl,);
   File file = File(filePath);
   try {
     await file.delete();
@@ -74,7 +80,7 @@ Future<void> deleteFileFromDevice(filePath) async {
   }
 }
 
-Future<List<File>> retrieveStoredFiles() async {
+Future<Directory> getAppDir() async {
   final storagePath = await getAppStorageDirectoryPath();
   final directory = Directory(storagePath);
 
@@ -82,12 +88,18 @@ Future<List<File>> retrieveStoredFiles() async {
     await directory.create(recursive: true);
   }
 
-  final fileList = Directory(storagePath).listSync();
+  return directory;
+}
+
+Future<List<File>> retrieveStoredFiles() async {
+  final directory = await getAppDir();
+
+  final fileList = directory.listSync();
   final List<File> files = [];
 
   for (var entity in fileList) {
     files.add(File(entity.path));
-    print("==> file ==> ${entity.path}");
+    // print("==> file ==> ${entity.path}");
   }
 
   return files;

@@ -42,7 +42,7 @@ class FileOverViewScreen extends StatelessWidget {
     );
   }
 
-  void _confirmDete(BuildContext context, String fileName) {
+  void _confirmDelete(BuildContext context, String fileName) {
     showDialog(
       context: context,
       builder: (btcx) {
@@ -55,8 +55,6 @@ class FileOverViewScreen extends StatelessWidget {
             ),
           ),
           content: Text("Voulez-vous supprimer cette image ?"),
-          // backgroundColor: Theme.of(context).primaryColor,
-          // contentTextStyle: TextStyle(color: Theme.of(context).accentColor),
           actions: [
             TextButton(
               child: Text("Oui"),
@@ -95,7 +93,6 @@ class FileOverViewScreen extends StatelessWidget {
     final file = storage.findFileByName(fileName);
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: Theme.of(context).primaryColor,
         backgroundColor: Colors.black12,
       ),
       extendBodyBehindAppBar: true,
@@ -118,7 +115,7 @@ class FileOverViewScreen extends StatelessWidget {
                     buildBottomIcon(
                       context,
                       Icons.delete_outline,
-                      () => _confirmDete(context, fileName),
+                      () => _confirmDelete(context, fileName),
                     ),
                   ],
                 ),
