@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Download Image From QR Code',
         theme: ThemeData(
           primaryColor: Colors.black,
           accentColor: Color.fromRGBO(247, 253, 255, 1),
