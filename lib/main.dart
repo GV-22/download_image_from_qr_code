@@ -15,6 +15,7 @@ void main() {
     //     Colors.greenAccent, //Navigation bar divider color
     // systemNavigationBarIconBrightness: Brightness.light, //navigation bar icon
   ));
+
   runApp(MyApp());
 }
 
@@ -22,6 +23,10 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.portraitUp,
+    ]);
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(
@@ -42,6 +47,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-
-
