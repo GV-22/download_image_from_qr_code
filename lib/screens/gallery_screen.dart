@@ -32,10 +32,11 @@ class _GalleryScreenState extends State<GalleryScreen> {
       appBar: AppBar(
         title: FittedBox(child: Text("Images sauvegardées")),
         actions: [
-          IconButton(
-            icon: Icon(Icons.delete_forever_outlined),
-            onPressed: _confirmDelete,
-          ),
+          if (files.isNotEmpty)
+            IconButton(
+              icon: Icon(Icons.delete_forever_outlined),
+              onPressed: _confirmDelete,
+            ),
           IconButton(
             icon: Icon(Icons.info_outline),
             onPressed: () => Navigator.of(context).pushNamed("/infos"),
@@ -45,8 +46,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(
-              color: Theme.of(context).primaryColor
-            ))
+                  color: Theme.of(context).primaryColor))
           : Padding(
               padding: EdgeInsets.zero,
               child: files.isEmpty
