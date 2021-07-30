@@ -8,7 +8,7 @@ import '../constants.dart';
 
 class InfosScreen extends StatelessWidget {
   Future<void> _urlLauncher(BuildContext context, url, errorMsg) async {
-    if (await canLaunch(url) != null) {
+    if (await canLaunch(url)) {
       await launch(url);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -69,7 +69,7 @@ class InfosScreen extends StatelessWidget {
                       height: 100,
                       margin: EdgeInsets.symmetric(horizontal: 20),
                       child: Image.asset(
-                        "assets/images/app_icon_bw.png",
+                        "assets/images/app_icon.png",
                         // fit: BoxFit.cover,
                       ),
                     ),

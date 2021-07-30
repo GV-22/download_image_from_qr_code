@@ -17,6 +17,9 @@ Future<String> getAppStorageDirectoryPath() async {
       break;
     }
   }
-
   return "$newPath/$storageFolderName";
+//   Directory root = await getTemporaryDirectory(); // this is using path_provider
+//   print("------- root ${root.path}");
+
+//   return "${root.path}/$storageFolderName";
 }

@@ -11,5 +11,5 @@ String formatDateToFileName(){
 }
 
 String to2Digits(String val){
-  return val.length == 2 ? val : "0$val";
+  return val.padLeft(2, "0");
 }

@@ -7,8 +7,9 @@ import '../helpers/file-storage.dart';
 class SavedFile {
   final String fileName;
   final String filePath;
+  final double fileSize;
 
-  SavedFile(this.fileName, this.filePath);
+  SavedFile({this.fileName, this.filePath, this.fileSize});
 }
 
 class StorageProvider with ChangeNotifier {
@@ -19,7 +20,10 @@ class StorageProvider with ChangeNotifier {
   }
 
   SavedFile findFileByName(String fileName) {
-    return _savedFiles.firstWhere((f) => f.fileName == fileName);
+    final file = _savedFiles.firstWhere((f) => f.fileName == fileName,
+        orElse: () => null);
+    if (file == null) throw "Unknown file with name $fileName";
+    return file;
   }
 
   Future<bool> storeFile(String fileUrl) async {
@@ -28,7 +32,16 @@ class StorageProvider with ChangeNotifier {
     // storedFile = [filePath, fileExt]
 
     if (storedFile != null) {
-      _savedFiles.insert(0, SavedFile(fileName + storedFile[1], storedFile[0]));
+      final String filePath = storedFile["filePath"];
+      final String fileExtension = storedFile["fileExtension"];
+      final double fileSize = storedFile["fileSize"];
+      _savedFiles.insert(
+        0,
+        SavedFile(
+            fileName: fileName + fileExtension,
+            filePath: filePath,
+            fileSize: fileSize),
+      );
 
       notifyListeners();
       return true;
@@ -37,24 +50,28 @@ class StorageProvider with ChangeNotifier {
     return false;
   }
 
-  Future<void> retrieveAndStoredFiles() async {
-    if (_savedFiles.isNotEmpty) return;
-    final files = await retrieveStoredFiles();
+  void setSavedFiled(List<SavedFile> files) {
+    _savedFiles = files;
+    notifyListeners();
+  }
+
+  Future<void> retrieveStoredFiles() async {
+    // if (_savedFiles.isNotEmpty) return;
+
+    final files = await retrieveFiles();
+    // print("--------------- files from folders $files");
     List<SavedFile> tmp = [];
 
-    files.forEach((file) {
+    for (var file in files) {
       tmp.insert(
         0,
         SavedFile(
-          basename(file.path),
-          file.path,
-        ),
+            fileName: basename(file.path),
+            filePath: file.path,
+            fileSize: getFileSize(file)),
       );
-    });
-
-    _savedFiles = tmp;
-
-    notifyListeners();
+    }
+    setSavedFiled(tmp);
   }
 
   Future<bool> deleteFile(String fileName) async {
@@ -66,8 +83,8 @@ class StorageProvider with ChangeNotifier {
       notifyListeners();
 
       return true;
-    } catch (_) {
-      return false;
+    } catch (e) {
+      throw e.toString();
     }
   }
 
@@ -76,12 +93,9 @@ class StorageProvider with ChangeNotifier {
       await deleteAllFiles();
       _savedFiles = [];
       notifyListeners();
-
       return true;
-    } catch (_) {
-      return false;
+    } catch (e) {
+      throw e.toString();
     }
   }
-
-
 }
