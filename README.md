@@ -2,6 +2,5 @@
 
 A flutter app to download image from qrcode.
 
-# how its work
+# how it works :smiley:
 
-- Check the download image by clicking on the icon @icon-camera
