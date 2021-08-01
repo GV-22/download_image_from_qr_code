@@ -30,3 +30,19 @@ A flutter app to download image from qrcode.
 
 ## Screenshots 📸
 
+<p float="left;padding=10px">
+  <img src="/screenshots/scan_screen.png" width="300" height="600"> 
+  <img src="/screenshots/empty_gallery.png" width="300" height="600"> 
+  <img src="/screenshots/downloading.png" width="300" height="600"> 
+</p>
+<p float="left;padding=10px">
+  <img src="/screenshots/gallery.png" width="300" height="600"> 
+  <img src="/screenshots/view_saved_image.png" width="300" height="600"> 
+  <img src="/screenshots/saved_image_details.png" width="300" height="600"> 
+</p>
+                                                                          
+###### If you have any features you want to see in this package, feel free to make a suggestion. 🎉
+
+## Don't forget to star ⭐ the repo it motivates me to share more open source.
+
+
