@@ -41,7 +41,6 @@ class MyApp extends StatelessWidget {
           accentColor: Color.fromRGBO(247, 253, 255, 1),
         ),
         routes: routes(context),
-        debugShowCheckedModeBanner: false,
       ),
     );
   }
