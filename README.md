@@ -19,14 +19,14 @@ A flutter app to download image from qrcode.
 
 - Create the qr code of the image you want to download (certainly from your computer)
 - Open the app, then scan the qr code previously generated
-- The image is automatically downloded and stored in your file storage
+- The image is automatically downloded and saved in your file storage
 
 ## Features :sunglasses:
 
 - Download and store image from its generated qr code
-- Check stored images in the app gallery
+- Check saved images in the app gallery
 - View/Share/Delete image
-- Delete all stored images
+- Delete all saved images
 
 ## Screenshots 📸
 

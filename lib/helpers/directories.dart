@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 
-import '../constants.dart';
+import '../config.dart';
 
 Future<String> getAppStorageDirectoryPath() async {
   Directory directory = await getExternalStorageDirectory();
@@ -17,7 +17,7 @@ Future<String> getAppStorageDirectoryPath() async {
       break;
     }
   }
-  return "$newPath/$storageFolderName";
+  return "$newPath/${AppConfig.storageFolderName}";
 //   Directory root = await getTemporaryDirectory(); // this is using path_provider
 //   print("------- root ${root.path}");
 

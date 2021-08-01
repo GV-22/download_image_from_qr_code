@@ -26,15 +26,15 @@ class StorageProvider with ChangeNotifier {
     return file;
   }
 
-  Future<bool> storeFile(String fileUrl) async {
+  Future<bool> saveFile(String fileUrl) async {
     final fileName = formatDateToFileName();
-    final storedFile = await downloadFile(fileUrl, fileName);
-    // storedFile = [filePath, fileExt]
+    final savedFile = await downloadFile(fileUrl, fileName);
+    // savedFile = [filePath, fileExt]
 
-    if (storedFile != null) {
-      final String filePath = storedFile["filePath"];
-      final String fileExtension = storedFile["fileExtension"];
-      final double fileSize = storedFile["fileSize"];
+    if (savedFile != null) {
+      final String filePath = savedFile["filePath"];
+      final String fileExtension = savedFile["fileExtension"];
+      final double fileSize = savedFile["fileSize"];
       _savedFiles.insert(
         0,
         SavedFile(
@@ -55,7 +55,7 @@ class StorageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> retrieveStoredFiles() async {
+  Future<void> retrieveSavedFiles() async {
     // if (_savedFiles.isNotEmpty) return;
 
     final files = await retrieveFiles();

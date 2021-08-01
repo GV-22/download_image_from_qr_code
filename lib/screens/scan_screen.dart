@@ -131,13 +131,13 @@ class _ScanScreenState extends State<ScanScreen> {
       builder: (context) {
         // dctx = btcx;
         return AlertDialog(
-          title: Text("Téléchargement"),
+          title: Text("Downloading"),
           content: Container(
             height: 100,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text("Veuillez patienter", style: TextStyle(fontSize: 12)),
+                Text("Please wait", style: TextStyle(fontSize: 12)),
                 SizedBox(height: 20),
                 LinearProgressIndicator(backgroundColor: Colors.black),
               ],
@@ -149,29 +149,29 @@ class _ScanScreenState extends State<ScanScreen> {
 
     try {
       await Provider.of<StorageProvider>(context, listen: false)
-          .storeFile(link);
+          .saveFile(link);
       Navigator.of(context).pop();
-      _snackBar("Image enregistrée avec succès");
+      _snackBar("Image successfully saved");
       _controller.resumeCamera();
       setState(() => _isScanning = true);
     } catch (e) {
       print("e... ${e.toString()}");
       Navigator.of(context).pop();
-      _snackBar("Le télécharegement a échoué.", isError: true);
+      _snackBar("Oops! the download has failed.", isError: true);
     }
   }
 
   void _onQRViewCreated(QRViewController controller) {
     _controller = controller;
 
-    // final String link =
-    //     "https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg";
-    // if (_canDownload(link)) {
-    //   _downloadScannedFile(link);
-    // } else {
-    //   _snackBar(
-    //       "Le scanner n'a pas pu détecter une url d'image.\nVeuillez réessayer.");
-    // }
+    final String link =
+        "https://d1fmx1rbmqrxrr.cloudfront.net/cnet/optim/i/edit/2019/04/eso1644bsmall__w770.jpg";
+    if (_canDownload(link)) {
+      _downloadScannedFile(link);
+    } else {
+      _snackBar(
+          "The scanner did not detect a image link. Please truy again.");
+    }
 
     controller.scannedDataStream.listen((scanData) {
       _result = scanData;
@@ -180,7 +180,7 @@ class _ScanScreenState extends State<ScanScreen> {
         _downloadScannedFile(_result.code);
       } else {
         _snackBar(
-            "Le scanner n'a pas pu détecter une url d'image.\nVeuillez réessayer.");
+            "The scanner did not detect a image link. Please truy again.");
       }
     });
   }

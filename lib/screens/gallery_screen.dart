@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/storage-provider.dart';
-import '../widgets/GalleryItem.dart';
+import '../widgets/gallery_item.dart';
 
 class GalleryScreen extends StatefulWidget {
   @override
@@ -30,7 +29,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: FittedBox(child: Text("Images sauvegardées")),
+        title: FittedBox(child: Text("Saved Images")),
         actions: [
           if (files.isNotEmpty)
             IconButton(
@@ -61,7 +60,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
                           ),
                           SizedBox(height: 20),
                           Text(
-                            "Vous n'avez aucune image sauvegardée.",
+                            "You don't have saved image yet.",
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -97,7 +96,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
     });
     try {
       await Provider.of<StorageProvider>(context, listen: false)
-          .retrieveStoredFiles();
+          .retrieveSavedFiles();
     } catch (e) {
       print("error _retrieve ${e.toString()}");
     } finally {
@@ -108,44 +107,38 @@ class _GalleryScreenState extends State<GalleryScreen> {
   }
 
   void _confirmDelete() {
-    final files =
-        Provider.of<StorageProvider>(context, listen: false).savedFiles;
-    if (files.isEmpty) {
-      _snackBar("Votre gallerie est vide, aucune image à supprimer");
-    } else {
-      showDialog(
-        context: context,
-        builder: (btcx) {
-          return AlertDialog(
-            title: Text(
-              "Confirmation",
-              style: TextStyle(
-                color: Theme.of(context).errorColor,
-                fontWeight: FontWeight.bold,
-              ),
+    showDialog(
+      context: context,
+      builder: (btcx) {
+        return AlertDialog(
+          title: Text(
+            "Confirmation",
+            style: TextStyle(
+              color: Theme.of(context).errorColor,
+              fontWeight: FontWeight.bold,
             ),
-            content:
-                Text("Voulez-vous supprimer toutes les images sauvegardées ?"),
-            actions: [
-              TextButton(child: Text("Oui"), onPressed: _deleteImages),
-              TextButton(
-                onPressed: () => Navigator.of(btcx).pop(),
-                child: Text("Non"),
-              )
-            ],
-          );
-        },
-      );
-    }
+          ),
+          content:
+              Text("Delete all saved images ?"),
+          actions: [
+            TextButton(child: Text("Yes"), onPressed: _deleteImages),
+            TextButton(
+              onPressed: () => Navigator.of(btcx).pop(),
+              child: Text("No"),
+            )
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _deleteImages() async {
     try {
       await Provider.of<StorageProvider>(context, listen: false)
           .deleteAllSavedFiles();
-      _snackBar("Images supprimées avec succès");
+      _snackBar("All saved images have been successfully deleted.");
     } catch (e) {
-      _snackBar("Oops! Une erreur s'est produite.Veuillez réesayer",
+      _snackBar("Oops! An error occured while deleting image. Please try again.",
           isError: true);
     } finally {
       Navigator.of(context).pop();
@@ -161,10 +154,5 @@ class _GalleryScreenState extends State<GalleryScreen> {
             : Theme.of(context).primaryColor,
       ),
     );
-  }
-
-  Future<void> _openAppSettings() async {
-    await openAppSettings();
-    setState(() {});
   }
 }

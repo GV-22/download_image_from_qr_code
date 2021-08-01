@@ -71,15 +71,15 @@ class FileOverViewScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Nom du fichier", style: _textStyle()),
+            Text("File name", style: _textStyle()),
             SizedBox(height: 5),
             Text(file.fileName),
             SizedBox(height: 10),
-            Text("Emplacement", style: _textStyle()),
+            Text("Location", style: _textStyle()),
             SizedBox(height: 5),
             Text(file.filePath),
             SizedBox(height: 10),
-            Text("Taille", style: _textStyle()),
+            Text("Size", style: _textStyle()),
             SizedBox(height: 5),
             Text("${file.fileSize} Mb"),
           ],
@@ -126,15 +126,15 @@ class FileOverViewScreen extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          content: Text("Voulez-vous supprimer cette image ?"),
+          content: Text("Do you want to delete this image ?"),
           actions: [
             TextButton(
-              child: Text("Oui"),
+              child: Text("Yes"),
               onPressed: () => _deleteFile(context, fileName),
             ),
             TextButton(
               onPressed: () => Navigator.of(btcx).pop(),
-              child: Text("Non"),
+              child: Text("No"),
             )
           ],
         );
@@ -147,12 +147,12 @@ class FileOverViewScreen extends StatelessWidget {
       await Provider.of<StorageProvider>(context, listen: false)
           .deleteFile(fileName);
       Navigator.of(context).pop();
-      _showSnackBar(context, "L'image a été supprimée avec succès.");
+      _showSnackBar(context, "Image successfully deleted.");
       await Future.delayed(Duration(seconds: 2));
       Navigator.of(context).pop();
     } catch (e) {
       _showSnackBar(
-          context, "Une erreur s'est produite lors de la suppression.");
+          context, "Oops! some error occured while deleting the image.");
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:download_image_from_qr_code/config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -34,15 +35,13 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        title: 'Download Image From QR Code',
+        title: AppConfig.appName,
         theme: ThemeData(
           primaryColor: Colors.black,
           accentColor: Color.fromRGBO(247, 253, 255, 1),
-          // accentColor: Color.fromRGBO(204, 210, 160, 1),
-          // accentColor: Color.fromRGBO(0, 0, 255, 1),
-          // accentColor: Colors.blue,
         ),
         routes: routes(context),
+        debugShowCheckedModeBanner: false,
       ),
     );
   }
