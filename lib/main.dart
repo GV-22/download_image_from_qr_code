@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
         title: AppConfig.appName,
         theme: ThemeData(
           primaryColor: Colors.black,
-          accentColor: Color.fromRGBO(247, 253, 255, 1),
+          colorScheme: ColorScheme.light(secondary: Color.fromRGBO(247, 253, 255, 1))
         ),
         routes: routes(context),
       ),

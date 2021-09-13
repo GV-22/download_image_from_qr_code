@@ -74,7 +74,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   IconButton(
                       icon: Icon(
                         Icons.photo_library_outlined,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         size: 35,
                       ),
                       onPressed: () =>
@@ -85,7 +85,7 @@ class _ScanScreenState extends State<ScanScreen> {
                     child: IconButton(
                       icon: Icon(
                         _isScanning ? Icons.camera : Icons.camera_outlined,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         size: 70,
                       ),
                       onPressed: _setCameraStatus,
@@ -96,7 +96,7 @@ class _ScanScreenState extends State<ScanScreen> {
                         _isFlashActive
                             ? Icons.flash_on
                             : Icons.flash_off_outlined,
-                        color: Theme.of(context).accentColor,
+                        color: Theme.of(context).colorScheme.secondary,
                         size: 35),
                     onPressed: _toggleFlash,
                   ),
@@ -117,7 +117,7 @@ class _ScanScreenState extends State<ScanScreen> {
         duration: Duration(seconds: 2),
         backgroundColor: isError
             ? Theme.of(context).errorColor
-            : Theme.of(context).accentColor,
+            : Theme.of(context).colorScheme.secondary,
       ),
     );
   }
@@ -217,7 +217,7 @@ class _ScanScreenState extends State<ScanScreen> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-        borderColor: Theme.of(context).accentColor,
+        borderColor: Theme.of(context).colorScheme.secondary,
         borderRadius: 10,
         borderLength: 30,
         borderWidth: 10,

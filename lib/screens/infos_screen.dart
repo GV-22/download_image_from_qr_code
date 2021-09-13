@@ -39,9 +39,10 @@ class InfosScreen extends StatelessWidget {
                     AppConfig.appName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Theme.of(context).accentColor),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.secondary,
+                    ),
                   ),
                 ],
               ),
@@ -65,7 +66,7 @@ class InfosScreen extends StatelessWidget {
                           child: Text(
                             AppConfig.myName,
                             style: TextStyle(
-                              color: Theme.of(context).accentColor,
+                              color: Theme.of(context).colorScheme.secondary,
                               fontWeight: FontWeight.bold,
                               fontStyle: FontStyle.italic,
                             ),
